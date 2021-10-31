@@ -2,9 +2,9 @@
 
 namespace Sitesurfer\Lwcrud;
 
+use Sitesurfer\Lwcrud\Commands\LwcrudCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Sitesurfer\Lwcrud\Commands\LwcrudCommand;
 
 class LwcrudServiceProvider extends PackageServiceProvider
 {
