@@ -22,9 +22,8 @@ class LwcrudServiceProvider extends PackageServiceProvider
             ->name('lwcrud')
             ->hasConfigFile()
             ->hasViews()
-            ->hasViewComponents('lwcrud',[SearchTop::class,DeleteButton::class,EditButton::class])
+            ->hasViewComponents('lwcrud', [SearchTop::class,DeleteButton::class,EditButton::class])
             ->hasMigration('create_lwcrud_table')
             ->hasCommand(LwcrudCommand::class);
     }
-
 }
