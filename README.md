@@ -9,14 +9,6 @@
 LWCrud is a lightweight CRUD example for Laravel 7+. designed to be a minimal kick off point for fast provision of boring list and forms.
 It is very much in development and no guarantees are given for stability whatsoever.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/lwcrud.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/lwcrud)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
 ## Installation
 
 You can install the package via composer:
