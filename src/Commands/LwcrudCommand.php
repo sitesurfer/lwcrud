@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Sitesurfer\Lwcrud\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LwcrudCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'lwcrud';
 
     public $description = 'My command';
 
