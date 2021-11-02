@@ -1,21 +1,21 @@
 <?php
 
-namespace Sitesurfer\Lwcrud;
+namespace Sitesurfer\Lwcrud\Components;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class EditButton extends Component
-{
-    public $edit_button_id;
+class LwPager extends Component{
+
+    public $links;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($editbuttonid)
+    public function __construct($listdata)
     {
-        $this->edit_button_id = $editbuttonid;
+        $this->links = $listdata;
     }
 
     /**
@@ -25,6 +25,7 @@ class EditButton extends Component
      */
     public function render()
     {
-        return view('components.edit-button');
+        //$links = $this->links->links();
+        return view('lwcrud::components.lw-pager');
     }
 }

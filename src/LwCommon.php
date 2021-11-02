@@ -16,18 +16,28 @@ trait LwCommon
     public $search,$image;
     public $isOpen = 0;
     public $sortField = "id";
-    public $sortAsc = false;
+    public $sortAsc = true;
     public $itemType = "Item";
     public $classPathBase = "";
     public $itemsPerPage = 15;
 
     public $createView;
     public $listView;
+    public $listNames;
+    public $dbJoin = null;
 
     public $data;
     public $deleteConfirm = 0;
 
+    //search bar options
+    public $allowCreation = false;
+    public $createButtonText = '';
+    public $extraSearchOption = '';
+
     public $accountId,$accountSlug,$accountName,$accountData;
+
+    private $listData;
+    private $appData;
 
     public function create()
     {
@@ -35,6 +45,9 @@ trait LwCommon
         $this->openModal();
 
         $this->data = array('spare' => '');
+
+        //set the new item button to the current itemp type
+        $this->createButtonText = $this->itemType;
     }
 
     public function edit($id)
@@ -144,15 +157,39 @@ trait LwCommon
         $this->sortField = $field;
     }
 
-    public function render()
+    public function getData()
     {
-        return view($this->listView,[
-            'lists' => $this->classPathBase::search($this->search)
-                ->when($this->sortField, function($query){
-                    $query->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
-                })->paginate($this->itemsPerPage)]);
+        //set up the varaiables we need to return
+        $listData = $this->classPathBase::search($this->search)
+            ->when($this->sortField, function($query){
+                $query->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
+            })->paginate($this->itemsPerPage);
+
+        ray($listData);
+
+        return $listData;
+
     }
 
+    public function render()
+    {
+
+        //run the data retrieval, this can be overridden by a user
+        $tempData = $this->getData();
+        $this->listData = $tempData;
+
+        $data = get_object_vars($this);
+        $this->appData = $data;
+
+        //make list view up internally
+        return view('lwcrud::layouts.lw-base',['listData' => $this->listData, 'appData' => $this->appData]);
+
+    }
+
+    public function getListData()
+    {
+        return $this->listData;
+    }
 
     public function confirmDelete($id)
     {
@@ -177,5 +214,51 @@ trait LwCommon
         SmartMagUpdated::dispatch($message);
     }
 
+    /**
+     * @return bool
+     */
+    public function getAllowCreation(): bool
+    {
+        return $this->allowCreation;
+    }
 
+    /**
+     * @param bool $allowCreation
+     */
+    public function setAllowCreation(bool $allowCreation): void
+    {
+        $this->allowCreation = $allowCreation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtraSearchOption(): string
+    {
+        return $this->extraSearchOption;
+    }
+
+    /**
+     * @param string $extraSearchOption
+     */
+    public function setExtraSearchOption(string $extraSearchOption): void
+    {
+        $this->extraSearchOption = $extraSearchOption;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreateButtonText(): string
+    {
+        return $this->createButtonText;
+    }
+
+    /**
+     * @param string $searchButtonText
+     */
+    public function setCreateButtonText(string $searchButtonText): void
+    {
+        $this->createButtonText = $searchButtonText;
+    }
 }

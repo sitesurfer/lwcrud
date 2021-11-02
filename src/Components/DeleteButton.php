@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace Sitesurfer\Lwcrud\Components;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -28,6 +28,6 @@ class DeleteButton extends Component
      */
     public function render()
     {
-        return \view('components.delete-button');
+        return \view('lwcrud::components.delete-button');
     }
 }

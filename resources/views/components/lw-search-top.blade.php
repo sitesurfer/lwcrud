@@ -34,12 +34,13 @@
 
     <div class="md:text-right my-1 px-1 w-full overflow-hidden md:my-1 md:px-1 md:w-1/3 xl:my-2.5 xl:px-2 xl:w-1/3">
 
+        {{--  whats this? --}}
         @isset($extraNewButton)
             {{ $extraNewButton }}
         @endisset
 
-        @if($newbutton == "true")
-        <button data-tippy-content="New {{$tippyText}}" wire:click="create()" type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+        @if($allowCreation == "true")
+        <button data-tippy-content="New {{ $createButtonText }}" wire:click="create()" type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
             <i class="fas fa-plus mr-1"></i> Create New
         </button>
         @endif
@@ -47,8 +48,8 @@
 
 </div>
 
-@isset($extraTopOption)
+@isset($extraSearchOption)
 <div class="mt-1 mb-2">
-     {{ $extraTopOption }}
+     {{ $extraSearchOption }}
 </div>
 @endisset

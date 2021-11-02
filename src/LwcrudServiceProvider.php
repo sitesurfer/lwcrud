@@ -2,10 +2,12 @@
 
 namespace Sitesurfer\Lwcrud;
 
-use App\View\Components\DeleteButton;
-use App\View\Components\EditButton;
-use App\View\Components\SearchTop;
+use Illuminate\Support\Facades\Blade;
 use Sitesurfer\Lwcrud\Commands\LwcrudCommand;
+use Sitesurfer\Lwcrud\Components\DeleteButton;
+use Sitesurfer\Lwcrud\Components\EditButton;
+use Sitesurfer\Lwcrud\Components\LwContainer;
+use Sitesurfer\Lwcrud\Components\LwPager;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -22,9 +24,18 @@ class LwcrudServiceProvider extends PackageServiceProvider
             ->name('lwcrud')
             ->hasConfigFile()
             ->hasViews()
-            ->hasViewComponents('lwcrud',[SearchTop::class,DeleteButton::class,EditButton::class])
             ->hasMigration('create_lwcrud_table')
             ->hasCommand(LwcrudCommand::class);
+    }
+
+    public function packageBooted()
+    {
+        Blade::componentNamespace('Sitesurfer\Lwcrud\Components','lwcrud');
+        ///Blade::component('lw-container',LwContainerComponent::class );
+        //Blade::component('lwcrud',DeleteButton::class);
+        //Blade::component('lwcrud',EditButton::class);
+        //Blade::component('lwcrud',LwPager::class);
+        //Blade::component('input-field', 'support-bubble::components.input-field', 'support-bubble');
     }
 
 }
