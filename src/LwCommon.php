@@ -174,7 +174,7 @@ trait LwCommon
     public function render()
     {
 
-        //run the data retrieval, this can be overridden by a user
+        //run the data retrieval, this can be overridden by a user.
         $tempData = $this->getData();
         $this->listData = $tempData;
 
