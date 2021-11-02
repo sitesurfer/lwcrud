@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 class EditButton extends Component
 {
     public $edit_button_id;
+
     /**
      * Create a new component instance.
      *

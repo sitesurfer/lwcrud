@@ -3,11 +3,9 @@
 namespace Sitesurfer\Lwcrud\Components;
 
 use Illuminate\View\Component;
-use Spatie\LaravelRay;
 
 class LwContainer extends Component
 {
-
     //back up vars array
     public $appData;
 
@@ -28,30 +26,26 @@ class LwContainer extends Component
     public $data;
     private $listData;
 
-    public function __construct($d,$a)
+    public function __construct($d, $a)
     {
         //add variables as if this came from us directly
         $this->listData = $d;
         $this->appData = $a;
 
         ray($this->appData);
-        foreach ($a as $key => $value)
-        {
-           $this->$key = $value;
+        foreach ($a as $key => $value) {
+            $this->$key = $value;
         }
 
-        if(!empty($this->listNames))
-        {
+        if (! empty($this->listNames)) {
             //make simple list view up internally
             $this->listView = 'lwcrud::partials.lw-list-table';
         }
 
-        if(empty($this->listView))
-        {
+        if (empty($this->listView)) {
             //if we have neither then provide an error.
             die("No List View or Names provided, please check your configuration");
         }
-
     }
 
     public function render()

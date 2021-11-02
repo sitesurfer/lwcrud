@@ -7,15 +7,15 @@ use Illuminate\View\Component;
 
 class DeleteButton extends Component
 {
-
     public $delete_button_id;
     public $deleteConfirm;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($deletebuttonid,$deleteConfirm)
+    public function __construct($deletebuttonid, $deleteConfirm)
     {
         $this->delete_button_id = $deletebuttonid;
         $this->deleteConfirm = $deleteConfirm;
