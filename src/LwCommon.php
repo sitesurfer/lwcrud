@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Spatie\LaravelRay\Ray;
+use Sitesurfer\Lwcrud\Lwcrud;
 
 trait LwCommon
 {
@@ -20,6 +22,7 @@ trait LwCommon
     public $itemType = "Item";
     public $classPathBase = "";
     public $itemsPerPage = 15;
+    private $indexField = "id";
 
     public $createView;
     public $listView;
@@ -33,11 +36,48 @@ trait LwCommon
     public $allowCreation = false;
     public $createButtonText = '';
     public $extraSearchOption = '';
+    public $editSettings = [];
 
     public $accountId,$accountSlug,$accountName,$accountData;
 
     private $listData;
     private $appData;
+
+    public $showHelp = false;
+    public $debugWithRay = false;
+
+    public function mount()
+    {
+        //left here in case we need to do anything in the trait that should not be changed
+
+        //allow user to have seperated setup method
+        if(method_exists($this,'setup'))
+        {
+            $this->checkSetup($this->setup());
+        }
+    }
+
+    public function checkSetup()
+    {
+        //check the setup to make sure that we have not missed anything
+        if ($this->itemType == "") { die("No itemType provided!"); }
+        if ($this->classPathBase == "") { die("No classPathBase provided!"); }
+        if ($this->listView == "" && empty($this->listNames)) { die("Provide either a list view OR fields!"); }
+        if ($this->createView == "" && empty($this->editSettings)) { die("No create view OR editSettings provided!"); }
+
+        if(!empty($this->editSettings))
+        {
+            $fields = ['label','type'];
+            foreach ($this->editSettings as $key => $es)
+            {
+                foreach ($fields as $f)
+                {
+                    if(empty($es[$f])) { die("An edit parameter - {$f} - is missing or blank in your config for \"{$key}\"."); }
+                }
+
+            }
+        }
+    }
 
     public function create()
     {
@@ -113,7 +153,7 @@ trait LwCommon
             $cid = str_replace("data.",'',$cid);
         }
 
-        //do some extra work on the input
+        //do some extra work on the lwinput
         $this->data[$cid] = $content;
 
         //output an event so that our editor component can pick it up
@@ -159,13 +199,16 @@ trait LwCommon
 
     public function getData()
     {
-        //set up the varaiables we need to return
+        //set up the variables we need to return
         $listData = $this->classPathBase::search($this->search)
             ->when($this->sortField, function($query){
                 $query->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
             })->paginate($this->itemsPerPage);
 
-        ray($listData);
+        if(method_exists($this, 'filterData'))
+        {
+            return $this->filterData($listData);
+        }
 
         return $listData;
 
@@ -181,9 +224,62 @@ trait LwCommon
         $data = get_object_vars($this);
         $this->appData = $data;
 
+        //report via ray() if turned on
+        if($this->debugWithRay) { $this->showDebugOutput(); }
+
         //make list view up internally
         return view('lwcrud::layouts.lw-base',['listData' => $this->listData, 'appData' => $this->appData]);
 
+    }
+
+    public function store()
+    {
+        //run a user specific method IF installed and needed before save
+        $this->preStoreActions($this->data);
+
+        //check all the fields
+        $this->validate();
+
+        //save to the database
+        $this->save();
+
+        //do broadcast
+        //$this->broadcastUpdate("Updated Menu for - ".Str::limit($this->accountName,50));
+
+        //tidy up
+        $this->afterStore($this->data['id'] ?? '');
+
+        //run a user specific method IF installed and needed after save
+        $this->afterStoreActions($this->data);
+
+    }
+
+    //this is the generic save function, if anything extra is needed then this will need to be done by the client
+    public function save()
+    {
+        //set some parameters
+        $indexField = [ $this->indexField => $this->data[$this->indexField] ?? '' ];
+        $columns = [];
+
+        foreach ($this->editSettings as $k => $v)
+        {
+         $columns[$k] = $this->data[$k];
+        }
+
+        $class = $this->classPathBase::updateOrCreate($indexField, $columns);
+
+    }
+
+    public function preStoreActions($data)
+    {
+        //this function receives all the data prior to the save
+        return $data;
+    }
+
+    public function afterStoreActions($data) :void
+    {
+        //this function receives all the data after the save
+        //does not return anything
     }
 
     public function getListData()
@@ -260,5 +356,36 @@ trait LwCommon
     public function setCreateButtonText(string $searchButtonText): void
     {
         $this->createButtonText = $searchButtonText;
+    }
+
+    public function showHelp()
+    {
+        $this->showHelp = true;
+    }
+
+    public function debugWithRay()
+    {
+        $this->debugWithRay = true;
+    }
+
+    public function showDebugOutput()
+    {
+        if(class_exists(Ray::class)) { ray($this->getListData(),$this->editSettings); }
+    }
+
+    /**
+     * @return string
+     */
+    public function getIndexField(): string
+    {
+        return $this->indexField;
+    }
+
+    /**
+     * @param string $indexField
+     */
+    public function setIndexField(string $indexField): void
+    {
+        $this->indexField = $indexField;
     }
 }

@@ -35,7 +35,7 @@ class LwcrudServiceProvider extends PackageServiceProvider
         //Blade::component('lwcrud',DeleteButton::class);
         //Blade::component('lwcrud',EditButton::class);
         //Blade::component('lwcrud',LwPager::class);
-        //Blade::component('input-field', 'support-bubble::components.input-field', 'support-bubble');
+        //Blade::component('lwinput-field', 'support-bubble::components.lwinput-field', 'support-bubble');
     }
 
 }

@@ -26,7 +26,10 @@ class LwContainer extends Component
     public $page;
     public $paginators;
     public $data;
+    public $showHelp;
+    public $debugWithRay;
     private $listData;
+    public $editSettings;
 
     public function __construct($d,$a)
     {
@@ -34,7 +37,7 @@ class LwContainer extends Component
         $this->listData = $d;
         $this->appData = $a;
 
-        ray($this->appData);
+        //ray($this->appData);
         foreach ($a as $key => $value)
         {
            $this->$key = $value;
@@ -44,6 +47,11 @@ class LwContainer extends Component
         {
             //make simple list view up internally
             $this->listView = 'lwcrud::partials.lw-list-table';
+        }
+
+        if(empty($this->createView))
+        {
+            $this->createView = 'lwcrud::partials.lw-edit-modal';
         }
 
         if(empty($this->listView))
