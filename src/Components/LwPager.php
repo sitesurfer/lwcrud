@@ -5,9 +5,10 @@ namespace Sitesurfer\Lwcrud\Components;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class LwPager extends Component{
-
+class LwPager extends Component
+{
     public $links;
+
     /**
      * Create a new component instance.
      *

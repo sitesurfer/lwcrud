@@ -15,7 +15,8 @@ trait LwCommon
     use WithPagination;
     use WithFileUploads;
 
-    public $search,$image;
+    public $search;
+    public $image;
     public $isOpen = 0;
     public $sortField = "id";
     public $sortAsc = true;
@@ -38,7 +39,10 @@ trait LwCommon
     public $extraSearchOption = '';
     public $editSettings = [];
 
-    public $accountId,$accountSlug,$accountName,$accountData;
+    public $accountId;
+    public $accountSlug;
+    public $accountName;
+    public $accountData;
 
     private $listData;
     private $appData;
@@ -84,7 +88,7 @@ trait LwCommon
         $this->resetInputFields();
         $this->openModal();
 
-        $this->data = array('spare' => '');
+        $this->data = ['spare' => ''];
 
         //set the new item button to the current itemp type
         $this->createButtonText = $this->itemType;
@@ -97,15 +101,14 @@ trait LwCommon
         $this->openModal();
     }
 
-    private function resetInputFields(){
+    private function resetInputFields()
+    {
         $this->reset(['data']);
-        if(function_exists('resetMultiImages')){
-            if (is_callable('resetMultiImages',true))
-            {
+        if (function_exists('resetMultiImages')) {
+            if (is_callable('resetMultiImages', true)) {
                 $this->resetMultiImages();
             }
         }
-
     }
 
     public function openModal()
@@ -143,21 +146,20 @@ trait LwCommon
         $this->resetPage();
     }
 
-    public function updateWysiwyg($cid,$content)
+    public function updateWysiwyg($cid, $content)
     {
         //get the correct id
         $cid = trim($cid);
 
-        if(Str::startsWith($cid,"data."))
-        {
-            $cid = str_replace("data.",'',$cid);
+        if (Str::startsWith($cid, "data.")) {
+            $cid = str_replace("data.", '', $cid);
         }
 
         //do some extra work on the lwinput
         $this->data[$cid] = $content;
 
         //output an event so that our editor component can pick it up
-        $this->emitTo('lw-wizzy','dbUpdate',['name' => $cid, 'data' => $content]);
+        $this->emitTo('lw-wizzy', 'dbUpdate', ['name' => $cid, 'data' => $content]);
     }
 
     public function resetsearch()
@@ -165,7 +167,8 @@ trait LwCommon
         $this->search = "";
     }
 
-    public function afterDelete(){
+    public function afterDelete()
+    {
         session()->flash("message", "{$this->itemType} Deleted Successfully.");
         $this->dispatchBrowserEvent('lw-after-store');
         $this->deleteConfirm = 0;
@@ -178,18 +181,18 @@ trait LwCommon
 
     public function makeSlug($value)
     {
-        $tempText =  strtolower(str_replace(' ','-',preg_replace("/[^ A-Z-a-z0-9]+/","",$value)));
+        $tempText = strtolower(str_replace(' ', '-', preg_replace("/[^ A-Z-a-z0-9]+/", "", $value)));
         $tempText = preg_replace('/-+/', '-', $tempText);
-        $tempText = trim($tempText,'-');
+        $tempText = trim($tempText, '-');
 
         return $tempText;
     }
 
     public function sortBy($field)
     {
-        if($this->sortField == $field){
-            $this->sortAsc = !$this->sortAsc;
-        }else{
+        if ($this->sortField == $field) {
+            $this->sortAsc = ! $this->sortAsc;
+        } else {
             $this->sortAsc = true;
         }
 
@@ -201,7 +204,7 @@ trait LwCommon
     {
         //set up the variables we need to return
         $listData = $this->classPathBase::search($this->search)
-            ->when($this->sortField, function($query){
+            ->when($this->sortField, function ($query) {
                 $query->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
             })->paginate($this->itemsPerPage);
 
@@ -211,7 +214,6 @@ trait LwCommon
         }
 
         return $listData;
-
     }
 
     public function render()
@@ -228,8 +230,7 @@ trait LwCommon
         if($this->debugWithRay) { $this->showDebugOutput(); }
 
         //make list view up internally
-        return view('lwcrud::layouts.lw-base',['listData' => $this->listData, 'appData' => $this->appData]);
-
+        return view('lwcrud::layouts.lw-base', ['listData' => $this->listData, 'appData' => $this->appData]);
     }
 
     public function store()
@@ -303,7 +304,7 @@ trait LwCommon
         $message = [
             "action" => $action,
             "user" => Auth::user()->name,
-            "userid" => Auth::user()->id
+            "userid" => Auth::user()->id,
         ];
         //send the broadcast
         //event(new SmartMagUpdated($message));
