@@ -9,7 +9,7 @@
                     <th class="px-4 py-2 text-left">{{ $lv }}</th>
                 @endforeach
 
-                <!-- <i wire:click="sortBy('gen_name')" class="fal fa-sm fa-sort-circle"></i> -->
+                <i wire:click="sortBy('gen_name')" class="fal fa-sm fa-sort-circle"></i>
 
                 <th class="px-4 py-2 w-2/12 text-right"></th>
             </tr>
