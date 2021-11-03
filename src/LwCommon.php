@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Spatie\LaravelRay\Ray;
-use Sitesurfer\Lwcrud\Lwcrud;
 
 trait LwCommon
 {
@@ -55,8 +54,7 @@ trait LwCommon
         //left here in case we need to do anything in the trait that should not be changed
 
         //allow user to have seperated setup method
-        if(method_exists($this,'setup'))
-        {
+        if (method_exists($this, 'setup')) {
             $this->checkSetup($this->setup());
         }
     }
@@ -64,21 +62,27 @@ trait LwCommon
     public function checkSetup()
     {
         //check the setup to make sure that we have not missed anything
-        if ($this->itemType == "") { die("No itemType provided!"); }
-        if ($this->classPathBase == "") { die("No classPathBase provided!"); }
-        if ($this->listView == "" && empty($this->listNames)) { die("Provide either a list view OR fields!"); }
-        if ($this->createView == "" && empty($this->editSettings)) { die("No create view OR editSettings provided!"); }
+        if ($this->itemType == "") {
+            die("No itemType provided!");
+        }
+        if ($this->classPathBase == "") {
+            die("No classPathBase provided!");
+        }
+        if ($this->listView == "" && empty($this->listNames)) {
+            die("Provide either a list view OR fields!");
+        }
+        if ($this->createView == "" && empty($this->editSettings)) {
+            die("No create view OR editSettings provided!");
+        }
 
-        if(!empty($this->editSettings))
-        {
+        if (! empty($this->editSettings)) {
             $fields = ['label','type'];
-            foreach ($this->editSettings as $key => $es)
-            {
-                foreach ($fields as $f)
-                {
-                    if(empty($es[$f])) { die("An edit parameter - {$f} - is missing or blank in your config for \"{$key}\"."); }
+            foreach ($this->editSettings as $key => $es) {
+                foreach ($fields as $f) {
+                    if (empty($es[$f])) {
+                        die("An edit parameter - {$f} - is missing or blank in your config for \"{$key}\".");
+                    }
                 }
-
             }
         }
     }
@@ -208,8 +212,7 @@ trait LwCommon
                 $query->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc');
             })->paginate($this->itemsPerPage);
 
-        if(method_exists($this, 'filterData'))
-        {
+        if (method_exists($this, 'filterData')) {
             return $this->filterData($listData);
         }
 
@@ -227,7 +230,9 @@ trait LwCommon
         $this->appData = $data;
 
         //report via ray() if turned on
-        if($this->debugWithRay) { $this->showDebugOutput(); }
+        if ($this->debugWithRay) {
+            $this->showDebugOutput();
+        }
 
         //make list view up internally
         return view('lwcrud::layouts.lw-base', ['listData' => $this->listData, 'appData' => $this->appData]);
@@ -252,7 +257,6 @@ trait LwCommon
 
         //run a user specific method IF installed and needed after save
         $this->afterStoreActions($this->data);
-
     }
 
     //this is the generic save function, if anything extra is needed then this will need to be done by the client
@@ -262,13 +266,11 @@ trait LwCommon
         $indexField = [ $this->indexField => $this->data[$this->indexField] ?? '' ];
         $columns = [];
 
-        foreach ($this->editSettings as $k => $v)
-        {
-         $columns[$k] = $this->data[$k];
+        foreach ($this->editSettings as $k => $v) {
+            $columns[$k] = $this->data[$k];
         }
 
         $class = $this->classPathBase::updateOrCreate($indexField, $columns);
-
     }
 
     public function preStoreActions($data)
@@ -277,7 +279,7 @@ trait LwCommon
         return $data;
     }
 
-    public function afterStoreActions($data) :void
+    public function afterStoreActions($data): void
     {
         //this function receives all the data after the save
         //does not return anything
@@ -371,7 +373,9 @@ trait LwCommon
 
     public function showDebugOutput()
     {
-        if(class_exists(Ray::class)) { ray($this->getListData(),$this->editSettings); }
+        if (class_exists(Ray::class)) {
+            ray($this->getListData(), $this->editSettings);
+        }
     }
 
     /**
